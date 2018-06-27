@@ -11802,7 +11802,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Import libraries necessary for this project</span>
@@ -11959,9 +11959,9 @@ Standard deviation of prices: $165171.13154429477
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong></p>
 <ul>
-<li>An increase in 'RM' will lead to an <strong>increase</strong> in 'MEDV'</li>
-<li>An increase in 'LSTAT' will lead to a <strong>decrease</strong> in 'MEDV'</li>
-<li>An increase in 'PTRATIO' will lead to a <strong>decrease</strong> in 'MEDV'</li>
+<li>An increase in 'RM' will lead to an <strong>increase</strong> in 'MEDV'. Justification: Houses with more rooms (i.e. larger) tend to worth more. </li>
+<li>An increase in 'LSTAT' will lead to a <strong>decrease</strong> in 'MEDV'. Justification: A higher 'LSTAT' means that the proportion of "lower class" is bigger in the neighborhood, making the neighborhood less desirable and thus linked to lower prices.</li>
+<li>An increase in 'PTRATIO' will lead to a <strong>decrease</strong> in 'MEDV'. Justification: A higher 'PTRATIO' means that on average each teacher needs to take care of more students, which means each student may get less attention from the teacher. This makes the neighborhood less desirable, thus linked to lower prices.</li>
 </ul>
 
 </div>
@@ -12114,7 +12114,7 @@ Standard deviation of prices: $165171.13154429477
 <p><strong>Answer:</strong></p>
 <ul>
 <li>Yes, I'd consider this model to have successfully captured the variation of the target variable</li>
-<li>This is because an R2 score of .923 indicates that 92.3% of the variance in the dependent variable is predicatable from the independent variable.</li>
+<li><strong>Why</strong>: R2 is a measure of goodness of fit. A model with an R2 score of 1 indicates that it can explain 100% of the variance in the target variable Y, and the fitted values always equal to the actual value, and the sum of squared residuals is zero. A score of .923 here indicates that the model can explain 92.3% of the variance in Y, which is why I'd consider it to have successfully captured the variance of Y.</li>
 </ul>
 
 </div>
@@ -12194,7 +12194,12 @@ Standard deviation of prices: $165171.13154429477
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong></p>
 <ul>
-<li>Splitting a dataset into training and testing subsets ensures that the model doesn't perform well on the training data but not on the testing data (i.e. overfitting). A good model should be able to generalize on data it has not seen before.</li>
+<li>Splitting a dataset into training and testing subsets ensures we can have honest evaluations of the model performance and can prevent overfitting and underfitting<ul>
+<li>Prevent Overfitting: If we use all of our data for training and do not have a test set, it's possible to see great performance on the training set (because it memorized the test data) but does not generalize well to data it has not seem before. Having a test set ensures that the model is not over-complex and cannot perform well on new data.</li>
+<li>Identify Underfitting: We will able to detect underfitting with both a training and a test dataset. The model would not perform well both on the training set and on the test set, suggesting underfitting (model too simple)</li>
+<li>Because we cannot use the test set for training and model improvement (it will bias the results towards the test data), we will need to do cross-validation</li>
+</ul>
+</li>
 </ul>
 
 </div>
@@ -12440,8 +12445,8 @@ Think about the pros and cons of adding more training points based on if the tra
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong></p>
 <ul>
-<li><strong>what is it</strong>: k-fold cross-validation technique splits the data into k equally sized subsets, uses k-1 subsets for training and the remaining 1 for testing, and repeats k times. The performance is the average of values in this loop.</li>
-<li><strong>benefits</strong>: 1/ does not contaminate the test set (i.e. does not use the test set for training) 2/ if we only have 1 subset for training and 1 subset for testing, we can only train once with no extra data to use to optimize the model. k-fold cv alleviate the lack of subsets by enabling training on k different subsets on data. </li>
+<li><strong>what is it</strong>: k-fold cross-validation technique splits the training dataset into k equally sized subsets, uses k-1 subsets for training and the remaining 1 for cross-validation. This process is repeated k times, with a different cross-validation set each time. The average score is reported as the performance of the model (on the training set). Once the best hyperparameters are selected using gridSearch with k-fold cross-validation, the test set is used to check the final performance of the model. Test set has not been touched until the very end.</li>
+<li><strong>benefits</strong>: 1/ does not contaminate the test set (i.e. does not use the test set for training) 2/ holding part of the training set out for cross-validation decreases the total data available for training. k-fold cross-validation alleviates this issue</li>
 </ul>
 
 </div>
@@ -12671,14 +12676,118 @@ Predicted selling price for Client 3&#39;s home: $881,650.00
 </div>
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;mean_rooms:&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="s1">&#39;RM&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;mean_lstat:&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="s1">&#39;LSTAT&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;mean_ptratio:&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="s1">&#39;PTRATIO&#39;</span><span class="p">]))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>mean_rooms: 6.240288343558291 mean_lstat: 12.939631901840492 mean_ptratio: 18.51656441717792
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;max_rooms:&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="s1">&#39;RM&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;max_lstat:&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="s1">&#39;LSTAT&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;max_ptratio:&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="s1">&#39;PTRATIO&#39;</span><span class="p">]))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>max_rooms: 8.398 max_lstat: 37.97 max_ptratio: 22.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;min_rooms:&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="s1">&#39;RM&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;min_lstat:&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="s1">&#39;LSTAT&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;min_ptratio:&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="s1">&#39;PTRATIO&#39;</span><span class="p">]))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>min_rooms: 3.5610000000000004 min_lstat: 1.98 min_ptratio: 12.6
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong></p>
 <ul>
-<li>The recommended prices are: 415K for No.1 | 225K for No.2 | 882K for No.3</li>
-<li>The recommendation seems reasonable because the 1/ it correctly predicts higher prices for No.3 and No.2 and 2/ the prices are within range</li>
+<li>The recommended prices are: 415K for Client 1's home, 225K for Client 2's home, and 882K for Client 3's home<ul>
+<li>Client 1's home: the home has 5 rooms, neighbor poverty level of 17%, and a 15-to-1 student/teacher ratio, each of which is close to the average home of the whole dataset. As a result, a predicted price close to the mean seems reasonable (415K vs. 454K)</li>
+<li>Client 2's home: the home has 4 rooms, poverty level of 32%, and a 22-to-1 student/teacher ratio, each of which is very close to the worst home in the dataset. As a result, a predicted price should be closer to the minimum price of 105K. I would argue that 225K is still within range, but seems a bit higher than it should be.</li>
+<li>Client 3's home: the home has 8 homes, poverty level of 3%, and a 12-to-1 student/teacher ratio, each of which is closer to the higher end of all the homes in the dataset. As a result, a predicted price of 882K lower than the max of 102K) seems reasonable</li>
+<li>Comparing across the 3 homes, the model correctly predicts that price is higher for 3 &gt; 1 &gt; 2, which also seems very reasonable.</li>
+</ul>
+</li>
 </ul>
 
 </div>
